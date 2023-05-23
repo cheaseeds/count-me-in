@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Count Me In</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/index.css">
+</head>
+
+
+<body>
+
+    <header class="page-header">
+        <a href="index.html" style="color: inherit; text-decoration: none;">
+            <h1 id="prod-name">Count Me In</h1>
+        </a>
+        
+        <a href="list.html">
+            <button style="float: right; " id="view-list">Who's Going?</button>
+        </a>
+        <a href="profile.html">
+            <button style="float: right; margin-right: 10px;" id="view-info">View My Info</button>       
+        </a>
+    </header>
+
+   
+
+    <main class="page-content">
+        <header>
+            
+            <h2>Professor Cooper's Dog's Birthday Sign Up</h2>
+            <p>Professor Cooper's dog Lebron is celebrating its 19th birthday! He's a very old doggo. 
+                Please sign up with your information for this once in a lifetime party for this last in his life time event!</p>
+                <h3 id="timer" style="font-size: 2rem;">
+                    <h3>Until the big event!</h3>
+                </h3>
+                
+            <br>
+
+            <form action="api/test.php" method="POST" class="signup-form">
+                <div class="form-group">
+                    <label for="first-name">First Name:</label>
+                    <input type="text" id="first-name" name="first-name" required>
+                    <label for="last-name">Last Name:</label>
+                    <input type="text" id="last-name" name="last-name" required>            
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" id="dob" name="dob" required>          
+                    <label for="address-line1">Address Line 1:</label>
+                    <input type="text" id="address-line1" name="address-line1" required>     
+                    <label for="address-line2">Address Line 2:</label>
+                    <input type="text" id="address-line2" name="address-line2"> 
+                    <label for="city">City:</label>
+                    <input type="text" id="city" name="city" required>
+                    <label for="state">State:</label>
+                    <input type="text" id="state" name="state" required>
+                    <label for="zip-code">Zip Code:</label>
+                    <input type="text" id="zip-code" name="zip-code" required>     
+                    <label for="phone-number">Phone Number:</label>
+                    <input type="tel" id="phone-number" name="phone-number" required>         
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>               
+                    <label for="image">Photo:</label>
+                    <input type="file" id="image" name="image" accept=".png, .jpg, .jpeg" required>
+                    <input type="submit" value="Sign Up!" style="margin-top: 10px;">
+                </div>
+            </form>
+            
+        </header>
+
+    </main> 
+
+    
+
+    <footer class="page-footer">
+        &copy; 2023 Alexander Chea
+    </footer>
+
+    <script id="FooBar" type="text/html">
+        <h1>{{title}}</h1>
+        <ul>
+            {{#buttons}}
+            <li>
+                <button data-click="bar" data-message="{{msg}}">{{displayText}}</button>
+            </li>
+            {{/buttons}}
+        </ul>
+    </script>
+    <script type="text/html" id="ApiTemplate">
+        <h4>Imaginary People: </h4>
+    
+        <ol>
+            {{#.}}
+                <li>
+                    Name: {{name}}, Age: {{age}}
+                </li>
+            {{/.}}
+        </ol>
+    </script>
+    <script type="module" src="index.js"></script>
+    <!--script for timer -->
+    <script>
+        // Source: https://www.w3schools.com/howto/howto_js_countdown.asp
+        // Set the date we're counting down to
+        var countDownDate = new Date("May 19, 2023 23:00:00").getTime();
+        
+        // Update the count down every 1 second
+        var x = setInterval(function() {
+        
+            // Get today's date and time
+            var now = new Date().getTime();
+        
+            // Find the distance between now and the count down date
+            var distance = countDownDate - now;
+        
+            // Time calculations for days, hours, minutes and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+            // Display the result in the element with id="demo"
+            document.getElementById("timer").innerHTML = days + "d " + hours + "h "
+            + minutes + "m " + seconds + "s ";
+                
+            // If the count down is finished
+            if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("timer").innerHTML = "EXPIRED";
+            }
+        }, 1000);
+        </script>
+
+    <script>
+        const imageUpload = document.getElementById('image');
+        const maxSize = 1 * 1024 * 1024; 
+        const maxWidth = 500;
+        const maxHeight = 500;
+    
+        imageUpload.addEventListener('change', function () {
+        const file = this.files[0];
+    
+        if (file.size > maxSize) {
+            alert('Error: Image size should be under 1 MB.');
+            this.value = ''; 
+            return;
+        }
+    
+        const img = new Image();
+        img.onload = function () {
+            if (this.width > maxWidth || this.height > maxHeight) {
+            alert('Error: Image dimensions should be within 500x500 pixels.');
+            imageUpload.value = ''; 
+            }
+        };
+        img.src = URL.createObjectURL(file);
+        });
+    </script>
+</body>
+
+</html>

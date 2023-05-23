@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Profile</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/index.css">
+</head>
+
+<body>
+    <header class="page-header">
+        <a href="index.html" style="color: inherit; text-decoration: none;">
+            <h1 id="prod-name">Count Me In</h1>
+        </a>
+
+        <a href="index.html">
+            <button style="float: right; margin-left: 10px; ">Back to Home</button>
+        </a>
+    </header>
+
+    <main class="page-content">
+        <div id="get-email">
+            <h3 style="margin:2px;">Enter your email to view</h3>
+            <form action="api/test.php" method="GET" class="profile-form">
+                <input type="email" name="email" placeholder="Email Address" style="margin:2px;">
+                <input type="submit" value="Submit" id="submit-btn" style="margin:5px;">
+            </form>
+        </div>
+
+        <div id="user-info"></div>
+        <div id="info-buttons"></div>
+
+        <!--Used to display the update profile form when clicked on-->
+        <div id="update-modal" class="modal">
+            <div class="modal-content">
+                <span id="close-button">&times;</span>
+                <h2>Update Information</h2>
+                <form id="update-form">
+                   
+                        <label for="first-name">First Name:</label>
+                        <input type="text" id="first-name" name="first-name">
+                        <label for="last-name">Last Name:</label>
+                        <input type="text" id="last-name" name="last-name">                    
+                        <label for="address-line1">Address Line 1:</label>
+                        <input type="text" id="address-line1" name="address-line1">     
+                        <label for="address-line2">Address Line 2:</label>
+                        <input type="text" id="address-line2" name="address-line2"> 
+                        <label for="city">City:</label>
+                        <input type="text" id="city" name="city">
+                        <label for="state">State:</label>
+                        <input type="text" id="state" name="state" >
+                        <label for="zip-code">Zip Code:</label>
+                        <input type="text" id="zip-code" name="zip-code">     
+                        <label for="phone-number">Phone Number:</label>
+                        <input type="tel" id="phone-number" name="phone-number">         
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email">               
+                        <input type="submit" value="Submit" style="margin-top: 10px;">
+                
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="page-footer">
+        &copy; 2023 Alexander Chea
+    </footer>
+
+    <script>
+        var id;
+        var email;
+        document.getElementById("submit-btn").addEventListener("click", function(e) {
+            e.preventDefault();
+
+            var emailInput = document.getElementsByName("email")[0];
+            email = emailInput.value.trim();
+
+            var emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+            if (email === "") {
+                alert("Please enter an email address.");
+                return;
+            }
+
+            if (!email.match(emailPattern)) {
+                alert("Please enter a valid email address.");
+                return;
+            }
+            
+            var req = new XMLHttpRequest();
+            req.open("GET", "api/test.php?email=" + encodeURIComponent(email));
+            req.onload = function() {
+                if (req.status === 200) {
+                    var userInfo = JSON.parse(req.responseText);
+
+                    var emailForm = document.getElementById("get-email");
+                    emailForm.remove();
+
+                    var userDiv = document.getElementById("user-info");
+                    var infoDiv = document.getElementById("info-buttons");
+                    var userHeading = document.createElement("h3");
+                    userHeading.textContent = "User Information:";
+                    userDiv.appendChild(userHeading);
+
+                    var userTable = document.createElement("table");
+                    userDiv.appendChild(userTable);
+
+                    var firstNameInput = document.getElementById("first-name");
+                    var lastNameInput = document.getElementById("last-name");
+                    //var dobInput = document.getElementById("dob");
+                    var addr1Input = document.getElementById("address-line1");
+                    var addr2Input = document.getElementById("address-line2");
+                    var cityInput = document.getElementById("city");
+                    var stateInput = document.getElementById("state");
+                    var zipCodeInput = document.getElementById("zip-code");
+                    var phoneInput = document.getElementById("phone-number");
+                    var emailInput = document.getElementById("email");
+                    //var imageInput = document.getElementById("image");
+
+
+                    //REMINDER: Change the SQL query to select as a name instead of rewriting the key
+                    for (var key in userInfo) { 
+                        var row = userTable.insertRow();
+                        var keyCell = row.insertCell();
+                        var valueCell = row.insertCell();
+
+                        if (key === "first-name") {
+                            keyCell.textContent = "First Name: "
+                            valueCell.textContent = userInfo[key];
+                            firstNameInput.value = userInfo[key];
+                            continue;
+                        }
+                        if (key === "id") {
+                            id = userInfo[key];
+                            continue;
+                        }
+                        if (key === "last-name") {
+                            keyCell.textContent = "Last Name: "
+                            valueCell.textContent = userInfo[key];
+                            lastNameInput.value = userInfo[key];
+                            continue;
+                        }
+
+                        if (key === "dob") {
+                            var dob = new Date(userInfo[key]);
+                            //dobInput.value = dob;
+                            var today = new Date();
+                            var age = today.getFullYear() - dob.getFullYear();
+
+                            keyCell.textContent = "Age: ";
+                            valueCell.textContent = age + " years old";
+                            
+                            continue;
+                            
+                        }
+
+                        if (key === "addr1") {
+                            keyCell.textContent = "Address Line 1: "
+                            valueCell.textContent = userInfo[key];
+                            addr1Input.value = userInfo[key];
+                            continue;
+                        }
+
+                        if (key === "addr2") {
+                            keyCell.textContent = "Address Line 2: "
+                            valueCell.textContent = userInfo[key];
+                            addr2Input.value = userInfo[key];
+                            continue;
+                        }
+
+                        if (key === "city") {
+                            keyCell.textContent = "City: "
+                            valueCell.textContent = userInfo[key];
+                            cityInput.value = userInfo[key];
+                            continue;
+                        }
+
+                        if (key === "state") {
+                            keyCell.textContent = "State: "
+                            valueCell.textContent = userInfo[key];
+                            stateInput.value = userInfo[key];
+                            continue;
+                        }
+
+                        if (key === "zip") {
+                            keyCell.textContent = "Zipcode: "
+                            valueCell.textContent = userInfo[key];
+                            zipCodeInput.value = userInfo[key];
+                            continue;
+                        }
+
+                        if (key === "phone") {
+                            keyCell.textContent = "Phone Number: "
+                            valueCell.textContent = userInfo[key];
+                            phoneInput.value = userInfo[key];
+                            continue;
+                        }
+
+
+                        if (key === "email") {
+                            keyCell.textContent = "Email Address: "
+                            valueCell.textContent = userInfo[key];
+                            emailInput.value = userInfo[key];
+                            continue;
+                        }
+                  
+                        if (key === "image") {
+                            keyCell.textContent = "Photo: ";
+                        
+                            var image = document.createElement("img");
+                            image.src = "data:image/jpg;base64," + userInfo[key];  
+                            valueCell.appendChild(image);
+                            //imageInput.value = userInfo[key];
+                        } 
+                        
+                    }
+                    
+                    var updateButton = document.createElement("button");
+                    updateButton.textContent = "Update Information";
+                    updateButton.id = "update-button";
+                    updateButton.addEventListener("click", handleUpd);
+                    infoDiv.appendChild(updateButton);
+                    
+                    
+
+                    var deleteButton = document.createElement("button");
+                    deleteButton.textContent = "Delete Information";
+                    deleteButton.id = "delete-button";
+                    deleteButton.style.marginLeft = "10px";
+                    deleteButton.addEventListener("click", handleDel);
+                    infoDiv.appendChild(deleteButton);
+
+                    
+
+
+                }
+            };
+            req.send();   
+        });
+
+        
+    </script>
+        
+    <script>
+        function handleDel() {
+            var confirm = window.confirm("Are you sure you want to delete your profile from the event?");
+            if (confirm) {
+                
+                var req = new XMLHttpRequest();
+                req.open("DELETE", "api/test.php?email=" + encodeURIComponent(email));
+                req.onload = function() {
+                    if (req.status === 200) {
+                        
+                        console.log("Deleted successfully");
+                        window.location.href = "index.html";
+
+                    } else {
+                        
+                        console.error("Failed to delete");
+                    }
+                };
+                req.send();
+            } else {
+            }
+        }
+
+        function handleUpd() {
+            
+            var updateUserButton = document.getElementById("update-button");
+            var modal = document.getElementById("update-modal");
+            var closeButton = document.getElementById("close-button");
+
+            modal.style.display = "block";
+
+            updateUserButton.addEventListener("click", function() {
+                modal.style.display = "block";
+            });
+
+            closeButton.addEventListener("click", function() {
+                modal.style.display = "none";
+            });
+
+            window.addEventListener("click", function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            });
+
+            var updateForm = document.getElementById("update-form");
+
+            updateForm.addEventListener("submit", function(e) {
+                e.preventDefault();
+                var uid = id;
+                var formData = new FormData(updateForm);
+
+
+                var req = new XMLHttpRequest();
+                req.open("PUT", "api/test.php?id=" + encodeURIComponent(uid));
+                req.onload = function() {
+                    if (req.status === 200) {
+                        console.log("User information updated successfully");
+                        
+                        modal.style.display = "none"; 
+                    } else {
+                        console.error("Failed to update user information");
+                    }
+                };
+                req.send(formData);
+            });
+        }
+    </script>
+
+
+</body>
