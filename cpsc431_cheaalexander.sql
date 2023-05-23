@@ -51,7 +51,7 @@ CREATE TABLE `cmi-users` (
 --
 
 INSERT INTO `cmi-users` (`idx`, `id`, `first-name`, `last-name`, `dob`, `addr1`, `addr2`, `city`, `state`, `zip`, `phone`, `email`, `image`) VALUES
-(9, '88767c62-f3e8-11ed-acd5-244bfedee9a7', 'Alex', 'Not', '1999-09-13', '123', '', '1234', '1235', 1236, '1237', 'poop2@gmail.com', 0x7468756d622d3135323931392e706e67),
+(9, '88767c62-f3e8-11ed-acd5-244bfedee9a7', 'Alex', 'Not', '1999-09-13', '123', '', '1234', '1235', 1236, '1237', 'hello@gmail.com', 0x7468756d622d3135323931392e706e67),
 (14, '8dfd9071-f689-11ed-94aa-244bfedee9a7', 'Test', 'Person', '2018-01-19', '123 CSUF Lane', '', 'Fullerton', 'CA', 91770, '1231231234', 'myemail@gmail.com', 0x7468756d622d3135323931392e706e67);
 
 --
